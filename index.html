@@ -196,13 +196,34 @@ body{
 
 /* ── INTRO (첫 화면, 슬라이드 0) ── */
 .intro-slide .slide-inner{ grid-template-columns:1fr; text-align:center; place-items:center; }
+.intro-hero{ width:100%; max-width:680px; }
 .intro-slide h1{
   font-size:clamp(2.6rem,6vw,4.4rem); font-weight:700; letter-spacing:-0.03em;
-  line-height:1.1; margin-bottom:1.4rem;
+  line-height:1.12; margin-bottom:1.2rem;
 }
-.intro-slide p{ font-size:1.05rem; font-weight:300; color:var(--muted); line-height:1.7; max-width:540px; }
-.intro-slide .meta{ margin-top:1.8rem; font-size:0.82rem; color:var(--accent-ink); font-weight:500; letter-spacing:0.03em; }
-.intro-slide .hint{ margin-top:2.4rem; font-size:0.78rem; color:var(--muted); }
+.intro-slide h1 .t-purple{ color:#534AB7; }
+.intro-slide h1 .t-green{ color:#1D9E75; }
+.intro-lead{ font-size:1.08rem; font-weight:300; color:var(--muted); line-height:1.7; }
+
+.intro-actions{ margin-top:2.2rem; display:flex; gap:0.7rem; justify-content:center; flex-wrap:wrap; }
+.btn-outline,.btn-fill{
+  font-family:inherit; font-size:0.92rem; font-weight:500; cursor:pointer;
+  padding:11px 26px; border-radius:980px; transition:all .2s; letter-spacing:0.01em;
+}
+.btn-outline{ background:transparent; color:var(--text); border:1px solid var(--line); }
+.btn-outline:hover{ border-color:#534AB7; color:#534AB7; }
+.btn-fill{ background:#1D9E75; color:#fff; border:1px solid #1D9E75; }
+.btn-fill:hover{ opacity:0.88; }
+
+.intro-detail{
+  margin-top:2.2rem; text-align:left; display:grid; gap:1.6rem;
+  border-top:1px solid var(--line); padding-top:2rem;
+}
+.intro-detail[hidden]{ display:none; }
+.intro-block h2{ font-size:1rem; font-weight:600; color:var(--text); margin-bottom:0.5rem; letter-spacing:-0.01em; }
+.intro-block p{ font-size:0.92rem; font-weight:300; color:var(--muted); line-height:1.75; }
+.intro-block .org-list{ font-weight:400; color:var(--text); line-height:1.9; }
+.intro-foot{ margin-top:2.4rem; font-size:0.8rem; color:var(--accent-ink); font-weight:500; letter-spacing:0.02em; }
 
 /* ── LOADER ── */
 .loader{
@@ -392,14 +413,42 @@ function introSlide(){
   return `
   <section class="slide intro-slide" data-slide="0">
     <div class="slide-inner">
-      <div>
-        <h1>아름다운 손,<br>빛나는 삶</h1>
-        <p>가사·돌봄 노동자 열 명의 손 이야기</p>
-        <div class="meta">2026 국제가사노동자의 날 · 6월 16일(화)</div>
-        <div class="hint">상단의 이름을 누르거나 좌우 화살표로 이동하세요</div>
+      <div class="intro-hero">
+        <h1><span class="t-purple">아름다운 손,</span><br><span class="t-green">빛나는 삶</span></h1>
+        <p class="intro-lead">가사·돌봄 노동자 열 명의 손 이야기</p>
+
+        <div class="intro-actions">
+          <button type="button" class="btn-outline" aria-expanded="false" onclick="toggleIntro(this)">전시 소개</button>
+          <button type="button" class="btn-fill" onclick="go(1)">전시 바로가기</button>
+        </div>
+
+        <div class="intro-detail" id="introDetail" hidden>
+          <section class="intro-block">
+            <h2>전시 소개</h2>
+            <p>책임감과 열정으로 자신의 일과 삶을 이어온 가사노동자의 손을 AI 모델을 활용해 팝아트 이미지로 재구성했습니다. 손에 담긴 노동의 시간과 삶의 흔적을 밝고 위트 있는 색감으로 표현하며, 가사노동자의 전문성과 자부심, 존엄을 함께 전합니다.</p>
+          </section>
+          <section class="intro-block">
+            <h2>국제가사노동자의 날</h2>
+            <p>2011년 6월 16일, 제100회 ILO 총회에서 가사노동자를 위한 양질의 일자리 협약(제189호)이 채택된 것을 기념해 제정되었습니다. 가사노동의 가치를 인정하고 전 세계 가사노동자의 노동권과 사회권 보장을 촉구하는 날입니다.</p>
+          </section>
+          <section class="intro-block">
+            <h2>성평등노동부천네트워크+</h2>
+            <p>양성평등한 부천시 노동환경 조성을 위해 지역 노동자 지원기관이 함께하는 네트워크입니다. 2021년부터 국제가사노동자의 날을 기념하여 인식개선 캠페인을 공동 추진해 오고 있습니다.</p>
+            <p class="org-list">(사)부천여성노동자회 · (사)부천YWCA · 부천시노동복지회관 · 부천시노동자종합복지관 · 부천시비정규직노동자지원센터 · 부천시이동노동자쉼터 · 부천시일쉼지원센터 · 한국노총부천김포지역지부 · 희망나눔사회적협동조합, 그리고 부천지역노사민정협의회</p>
+          </section>
+        </div>
+
+        <div class="intro-foot">부천시일쉼지원센터 · 2026 국제가사노동자의 날</div>
       </div>
     </div>
   </section>`;
+}
+
+function toggleIntro(btn){
+  const d=document.getElementById("introDetail");
+  const open=d.hasAttribute("hidden");
+  if(open){ d.removeAttribute("hidden"); btn.setAttribute("aria-expanded","true"); btn.textContent="전시 소개 닫기"; }
+  else { d.setAttribute("hidden",""); btn.setAttribute("aria-expanded","false"); btn.textContent="전시 소개"; }
 }
 
 /* ════════ 6) 인터랙션 ════════ */
